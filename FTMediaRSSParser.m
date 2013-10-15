@@ -9,6 +9,10 @@
 #import "FTMediaRSSParser.h"
 
 
+#define kFTMediaRSSParserDebug                                  NO
+#define kFTMediaRSSParserDebugFull                              if (kFTMediaRSSParserDebug)
+
+
 @interface FTMediaRSSParser ()
 
 @property (nonatomic, readonly) NSData *data;
@@ -76,7 +80,7 @@
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
-    NSLog(@"Start elements: %@ with attributes: %@", elementName, attributeDict);
+    kFTMediaRSSParserDebugFull NSLog(@"Start elements: %@ with attributes: %@", elementName, attributeDict);
     _currentElementName = elementName;
     if ([elementName isEqualToString:@"item"]) {
         _currentItem = [[FTMediaRSSParserFeedItem alloc] init];
@@ -123,7 +127,7 @@
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-    NSLog(@"Finished elements: %@\n\n\n\n\n\n", elementName);
+    kFTMediaRSSParserDebugFull NSLog(@"Finished elements: %@\n\n\n\n\n\n", elementName);
     _currentElementName = nil;
     if ([elementName isEqualToString:@"item"]) {
         [_currentItem setCredit:_currentCredit];
@@ -139,7 +143,7 @@
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
     if (!_currentElementName) return;
-    NSLog(@"Characters found: '%@'", string);
+    kFTMediaRSSParserDebugFull NSLog(@"Characters found: '%@'", string);
     if (!_currentItem) {
         if ([_currentElementName isEqualToString:@"title"]) {
             [_info setTitle:string];
@@ -207,5 +211,5 @@
     }
 }
 
-@end
 
+@end
