@@ -22,5 +22,7 @@
 @property (nonatomic, copy) NSString *atomIcon;
 @property (nonatomic, copy) NSString *atomLink;
 
+@property (nonatomic) NSTimeInterval *parsingTime;
+
 
 @end

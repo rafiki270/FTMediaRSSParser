@@ -27,6 +27,10 @@
 
 @property (nonatomic, readonly) FTMediaRSSParserCompletionBlock completionBlock;
 
+@property (nonatomic, readonly) NSTimeInterval debugTimeStart;
+
+- (void)parse:(id)parseObject withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock;
+
 @end
 
 
@@ -50,10 +54,17 @@
 
 #pragma mark Settings
 
-- (void)parseData:(NSData *)data withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock {
-    _data = data;
+- (void)parse:(id)parseObject withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock {
+    _debugTimeStart = [[NSDate date] timeIntervalSinceNow];
     _completionBlock = completionBlock;
-    _parser = [[NSXMLParser alloc] initWithData:_data];
+    
+    if ([parseObject isKindOfClass:[NSXMLParser class]]) {
+        _parser = parseObject;
+    }
+    else {
+        _data = parseObject;
+        _parser = [[NSXMLParser alloc] initWithData:_data];
+    }
     
     [_parser setDelegate:self];
     [_parser parse];
@@ -61,9 +72,14 @@
 
 #pragma mark Parsing
 
++ (void)parse:(NSXMLParser *)parse withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock {
+    FTMediaRSSParser *p = [self instance];
+    [p parse:parse withCompletionHandler:completionBlock];
+}
+
 + (void)parseData:(NSData *)data withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock {
     FTMediaRSSParser *p = [self instance];
-    [p parseData:data withCompletionHandler:completionBlock];
+    [p parse:data withCompletionHandler:completionBlock];
 }
 
 + (void)parseString:(NSString *)xmlString withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock {
@@ -135,6 +151,9 @@
         [_items addObject:_currentItem];
     }
     else if ([elementName isEqualToString:@"channel"]) {
+        NSTimeInterval t = ([[NSDate date] timeIntervalSinceNow] - _debugTimeStart);
+        NSLog(@"Parsing time: %f", t);
+#warning Finish parsing benchmarking
         if (_completionBlock) {
             _completionBlock(_info, _items, nil);
         }
