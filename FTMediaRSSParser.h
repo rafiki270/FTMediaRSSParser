@@ -7,22 +7,33 @@
 //
 
 #import <Foundation/Foundation.h>
-
-
-@class FTMediaRSSParserFeedInfo;
+#import "FTMediaRSSParserFeedItem.h"
+#import "FTMediaRSSParserFeedInfo.h"
 
 
 typedef void (^FTMediaRSSParserCompletionBlock)(FTMediaRSSParserFeedInfo *info, NSArray *items, NSError *error);
 
+typedef NS_ENUM(NSInteger, FTMediaRSSParserFeedItemMediaType) {
+    FTMediaRSSParserFeedItemMediaTypeThumbnail,
+    FTMediaRSSParserFeedItemMediaTypeContent,
+    FTMediaRSSParserFeedItemMediaTypeDescription,
+    FTMediaRSSParserFeedItemMediaTypeCategory,
+    FTMediaRSSParserFeedItemMediaTypeCredit,
+    FTMediaRSSParserFeedItemMediaTypeRating,
+    FTMediaRSSParserFeedItemMediaTypeCopyright
+};
 
-@interface FTMediaRSSParser : NSObject
+typedef NS_ENUM(NSInteger, FTMediaRSSParserMedium) {
+    FTMediaRSSParserMediumImage,
+    FTMediaRSSParserMediumHtml
+};
 
-+ (void)parse:(NSString *)xmlString withCompletion:(id)completionBlock;
+
+@interface FTMediaRSSParser : NSObject <NSXMLParserDelegate>
+
++ (void)parseData:(NSData *)data withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock;
++ (void)parseString:(NSString *)xmlString withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock;
 
 
 @end
 
-
-@interface FTMediaRSSParserFeedInfo : NSObject
-
-@end
