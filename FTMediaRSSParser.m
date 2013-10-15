@@ -69,6 +69,12 @@
 
 #pragma mark Parser delegate methods
 
+- (void)checkForCategory {
+    if (!_currentItem.category) {
+        [_currentItem setCategory:[[FTMediaRSSParserFeedCategory alloc] init]];
+    }
+}
+
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
     NSLog(@"Start elements: %@ with attributes: %@", elementName, attributeDict);
     _currentElementName = elementName;
@@ -85,8 +91,12 @@
             [_currentCredit setRole:[attributeDict objectForKey:@"role"]];
             [_currentCredit setScheme:[attributeDict objectForKey:@"scheme"]];
         }
+        else if ([_currentElementName isEqualToString:@"media:category"]) {
+            [self checkForCategory];
+            [_currentItem.category setLabel:[attributeDict objectForKey:@"label"]];
+        }
         else if ([_currentElementName isEqualToString:@"media:copyright"]) {
-            [_currentItem setCopyright:[attributeDict objectForKey:@"url"]];
+            [_currentItem setCopyrightUrlString:[attributeDict objectForKey:@"url"]];
         }
         else if ([_currentElementName isEqualToString:@"media:thumbnail"]) {
             FTMediaRSSParserFeedItemThumbnail *t = [[FTMediaRSSParserFeedItemThumbnail alloc] init];
@@ -164,6 +174,10 @@
         }
         else if ([_currentElementName isEqualToString:@"link"]) {
             [_currentItem setUrlString:string];
+        }
+        else if ([_currentElementName isEqualToString:@"media:category"]) {
+            [self checkForCategory];
+            [_currentItem.category setPath:string];
         }
         else if ([_currentElementName isEqualToString:@"pubDate"]) {
             [_currentItem setPublishedString:string];

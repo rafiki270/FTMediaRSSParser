@@ -13,21 +13,6 @@
 
 typedef void (^FTMediaRSSParserCompletionBlock)(FTMediaRSSParserFeedInfo *info, NSArray *items, NSError *error);
 
-typedef NS_ENUM(NSInteger, FTMediaRSSParserFeedItemMediaType) {
-    FTMediaRSSParserFeedItemMediaTypeThumbnail,
-    FTMediaRSSParserFeedItemMediaTypeContent,
-    FTMediaRSSParserFeedItemMediaTypeDescription,
-    FTMediaRSSParserFeedItemMediaTypeCategory,
-    FTMediaRSSParserFeedItemMediaTypeCredit,
-    FTMediaRSSParserFeedItemMediaTypeRating,
-    FTMediaRSSParserFeedItemMediaTypeCopyright
-};
-
-typedef NS_ENUM(NSInteger, FTMediaRSSParserMedium) {
-    FTMediaRSSParserMediumImage,
-    FTMediaRSSParserMediumHtml
-};
-
 
 @interface FTMediaRSSParser : NSObject <NSXMLParserDelegate>
 
