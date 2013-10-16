@@ -16,6 +16,7 @@ typedef void (^FTMediaRSSParserCompletionBlock)(FTMediaRSSParserFeedInfo *info, 
 
 @interface FTMediaRSSParser : NSObject <NSXMLParserDelegate>
 
++ (void)parse:(NSXMLParser *)parse withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock;
 + (void)parseData:(NSData *)data withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock;
 + (void)parseString:(NSString *)xmlString withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock;
 
