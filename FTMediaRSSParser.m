@@ -27,7 +27,7 @@
 
 @property (nonatomic, readonly) FTMediaRSSParserCompletionBlock completionBlock;
 
-@property (nonatomic, readonly) NSTimeInterval debugTimeStart;
+@property (nonatomic, readonly) NSDate *debugTimeStart;
 
 
 @end
@@ -54,7 +54,7 @@
 #pragma mark Settings
 
 - (void)parse:(id)parseObject withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock {
-    _debugTimeStart = [[NSDate date] timeIntervalSinceNow];
+    _debugTimeStart = [NSDate date];
     _completionBlock = completionBlock;
     
     if ([parseObject isKindOfClass:[NSXMLParser class]]) {
@@ -150,7 +150,7 @@
         [_items addObject:_currentItem];
     }
     else if ([elementName isEqualToString:@"channel"]) {
-        NSTimeInterval t = ([[NSDate date] timeIntervalSinceNow] - _debugTimeStart);
+        NSTimeInterval t = [[NSDate date] timeIntervalSinceDate:_debugTimeStart];
         NSLog(@"Parsing time: %f", t);
 #warning Finish parsing benchmarking
         if (_completionBlock) {
