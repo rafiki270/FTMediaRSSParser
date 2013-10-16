@@ -29,7 +29,6 @@
 
 @property (nonatomic, readonly) NSTimeInterval debugTimeStart;
 
-- (void)parse:(id)parseObject withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock;
 
 @end
 
