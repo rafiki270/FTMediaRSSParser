@@ -151,8 +151,7 @@
     }
     else if ([elementName isEqualToString:@"channel"]) {
         NSTimeInterval t = [[NSDate date] timeIntervalSinceDate:_debugTimeStart];
-        NSLog(@"Parsing time: %f", t);
-#warning Finish parsing benchmarking
+        [_info setParsingTime:t];
         if (_completionBlock) {
             _completionBlock(_info, _items, nil);
         }
