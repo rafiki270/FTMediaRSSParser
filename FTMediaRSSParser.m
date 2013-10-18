@@ -71,6 +71,14 @@
 
 #pragma mark Parsing
 
+- (NSString *)stripLeadingWhitespace:(NSString *)string {
+    NSInteger i = 0;
+    while ((i < [string length]) && [[NSCharacterSet whitespaceCharacterSet] characterIsMember:[string characterAtIndex:i]]) {
+        i++;
+    }
+    return [string substringFromIndex:i];
+}
+
 + (void)parse:(NSXMLParser *)parse withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock {
     FTMediaRSSParser *p = [self instance];
     [p parse:parse withCompletionHandler:completionBlock];
@@ -191,7 +199,7 @@
     }
     else {
         if ([_currentElementName isEqualToString:@"title"]) {
-            [_currentItem setTitle:string];
+            [_currentItem setTitle:[self stripLeadingWhitespace:string]];
         }
         else if ([_currentElementName isEqualToString:@"link"]) {
             [_currentItem setUrlString:string];
@@ -209,7 +217,7 @@
             [_currentItem setRating:([string isEqualToString:@"adult"] ? FTMediaRSSParserFeedItemDARatingAdult : FTMediaRSSParserFeedItemDARatingNoAdult)];
         }
         else if ([_currentElementName isEqualToString:@"media:credit"]) {
-            if (([string rangeOfString:@"http:\\"].location == NSNotFound) && ([string rangeOfString:@"https:\\"].location == NSNotFound)) {
+            if (([string rangeOfString:@"http://"].location == NSNotFound) && ([string rangeOfString:@"https://"].location == NSNotFound)) {
                 [_currentCredit setName:string];
             }
             else {
@@ -220,10 +228,10 @@
             [_currentItem setCopyright:string];
         }
         else if ([_currentElementName isEqualToString:@"media:description"]) {
-            [_currentItem setDescriptionText:string];
+            [_currentItem setDescriptionText:[self stripLeadingWhitespace:string]];
         }
         else if ([_currentElementName isEqualToString:@"description"]) {
-            [_currentItem setDescriptionFull:string];
+            [_currentItem setDescriptionFull:[self stripLeadingWhitespace:string]];
         }
     }
 }
