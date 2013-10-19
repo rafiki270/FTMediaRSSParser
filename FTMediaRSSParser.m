@@ -71,14 +71,6 @@
 
 #pragma mark Parsing
 
-- (NSString *)stripLeadingWhitespace:(NSString *)string {
-    NSInteger i = 0;
-    while ((i < [string length]) && [[NSCharacterSet whitespaceCharacterSet] characterIsMember:[string characterAtIndex:i]]) {
-        i++;
-    }
-    return [string substringFromIndex:i];
-}
-
 + (void)parse:(NSXMLParser *)parse withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock {
     FTMediaRSSParser *p = [self instance];
     [p parse:parse withCompletionHandler:completionBlock];
@@ -92,6 +84,29 @@
 + (void)parseString:(NSString *)xmlString withCompletionHandler:(FTMediaRSSParserCompletionBlock)completionBlock {
     NSData *data = [xmlString dataUsingEncoding:NSUTF8StringEncoding];
     [self parseData:data withCompletionHandler:completionBlock];
+}
+
+#pragma mark Formatting
+
+- (NSString *)stripLeadingWhitespace:(NSString *)string {
+    NSInteger i = 0;
+    while ((i < [string length]) && [[NSCharacterSet whitespaceCharacterSet] characterIsMember:[string characterAtIndex:i]]) {
+        i++;
+    }
+    return [string substringFromIndex:i];
+}
+
+- (NSDateFormatter *)stringDateFormatter {
+    static NSDateFormatter *formatter = nil;
+    if (formatter == nil) {
+        formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss zzz"];
+    }
+    return formatter;
+}
+
+- (NSDate *)stringDateFromString:(NSString *)string {
+    return [[self stringDateFormatter] dateFromString:string];
 }
 
 #pragma mark Parser delegate methods
@@ -184,8 +199,7 @@
         }
         else if ([_currentElementName isEqualToString:@"pubDate"]) {
             [_info setPublishedString:string];
-            // TODO: Finish date conversion
-            [_info setPublished:nil];
+            [_info setPublished:[self stringDateFromString:string]];
         }
         else if ([_currentElementName isEqualToString:@"generator"]) {
             [_info setGenerator:string];
@@ -210,8 +224,8 @@
         }
         else if ([_currentElementName isEqualToString:@"pubDate"]) {
             [_currentItem setPublishedString:string];
-            // TODO: Finish date conversion
-            [_currentItem setPublished:nil];
+            NSDate *date = [self stringDateFromString:string];
+            [_currentItem setPublished:date];
         }
         else if ([_currentElementName isEqualToString:@"media:rating"]) {
             [_currentItem setRating:([string isEqualToString:@"adult"] ? FTMediaRSSParserFeedItemDARatingAdult : FTMediaRSSParserFeedItemDARatingNoAdult)];
