@@ -101,6 +101,9 @@
     if (formatter == nil) {
         formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss zzz"];
+        
+        NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        [formatter setLocale:locale];
     }
     return formatter;
 }
