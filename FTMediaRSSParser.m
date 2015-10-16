@@ -192,7 +192,7 @@
             [_info setTitle:string];
         }
         else if ([_currentElementName isEqualToString:@"description"]) {
-            [_info setDescription:string];
+            [_info setDesc:string];
         }
         else if ([_currentElementName isEqualToString:@"language"]) {
             [_info setLanguage:string];

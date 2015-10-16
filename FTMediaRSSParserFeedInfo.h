@@ -12,7 +12,7 @@
 @interface FTMediaRSSParserFeedInfo : NSObject
 
 @property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *description;
+@property (nonatomic, copy) NSString *desc;
 @property (nonatomic, copy) NSString *language;
 @property (nonatomic, copy) NSString *copyright;
 @property (nonatomic, copy) NSString *publishedString;
